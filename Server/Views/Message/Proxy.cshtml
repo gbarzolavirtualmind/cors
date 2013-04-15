@@ -1,0 +1,17 @@
+﻿@{
+    Layout = null;
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- Replace the url with your own location -->
+		<script type="text/javascript" src="@Url.Content("~/Scripts/porthole.min.js")"></script>
+        <!--[if lt IE 9]>
+            <script src="@Url.Content("~/Scripts/json2.js")"></script>
+        <![endif]-->
+		<script type="text/javascript">
+		    window.onload = function () { Porthole.WindowProxyDispatcher.start(); };
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

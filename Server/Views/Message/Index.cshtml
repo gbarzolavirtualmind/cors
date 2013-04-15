@@ -1,4 +1,32 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    Layout = null;
 }
-Hola
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- Replace the url with your own location -->
+		<script type="text/javascript" src="@Url.Content("~/Scripts/porthole.min.js")"></script>
+        <!--[if lt IE 9]>
+            <script src="@Url.Content("~/Scripts/json2.js")"></script>
+        <![endif]-->
+		<script type="text/javascript">
+		    var windowProxy;
+		    window.onload = function () {
+		        // Create a proxy window to send to and receive 
+		        // messages from the parent
+		        windowProxy = new Porthole.WindowProxy(
+                    'http://localhost:20652/Home/Proxy');
+
+		        // Register an event handler to receive messages;
+		        windowProxy.addEventListener(function (event) {
+		            console.log(event);
+		            document.getElementById("test").innerText = JSON.stringify(event);
+		            windowProxy.post("ack");
+		        });
+		    };
+		</script>
+	</head>
+	<body>
+        Hola
+        <div id="test"></div>
+	</body>
+</html>

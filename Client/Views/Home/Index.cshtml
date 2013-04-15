@@ -5,6 +5,10 @@
 <h2>CORS Tester</h2>
 
 @section scripts{
+    <!--[if lt IE 9]>
+        <script src="@Url.Content("~/Scripts/json2.js")"></script>
+    <![endif]-->
+
     <script type="text/javascript">
         var success = function (data, status, xhq) {
             var text = JSON.stringify(data);
@@ -14,11 +18,28 @@
             var text = JSON.stringify(xhr);
             $("#result").html(text);
         };
+        var windowProxy;
+
+        function onMessage(messageEvent) {
+            var text = JSON.stringify(messageEvent);
+            $("#result").html(text);
+            /*
+           messageEvent.origin: Protocol and domain origin of the message
+           messageEvent.data: Message itself
+           messageEvent.source: Window proxy object, useful to post a response 
+           */
+        }
 
 
 
         $(document).ready(function () {
-            $("#all, #byId").click(function () {
+
+            windowProxy = new Porthole.WindowProxy('http://localhost:23009/proxy.html', 'guestFrame');
+            // Register an event handler to receive messages;
+            windowProxy.addEventListener(onMessage);
+
+            $("#all").click(function () {
+                windowProxy.post({ 'action': 'supersizeme' });
                 var url = $(this).data("url");
                 $.getJSON(url, {}, success, error).fail(error);
             });
@@ -82,4 +103,4 @@
 <div id="result" style="border: 1px solid #808080; min-height: 200px">
 </div>
 
-<iframe src="http://localhost:23009/Message"></iframe>
+<iframe id="guestFrame" name="guestFrame" src="http://localhost:23009/Message/"></iframe>

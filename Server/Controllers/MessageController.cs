@@ -16,5 +16,10 @@ namespace Server.Controllers
             return View();
         }
 
+        public ActionResult Proxy()
+        {
+            return View();
+        }
+
     }
 }
