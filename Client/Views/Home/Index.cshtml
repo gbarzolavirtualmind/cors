@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>CORS Tester</h2>
+
+@section scripts{
+    <script type="text/javascript">
+        var success = function (data, status, xhq) {
+            var text = JSON.stringify(data);
+            $("#result").html(text);
+        };
+        var error = function (xhr, ajaxOptions, thrownError) {
+            var text = JSON.stringify(xhr);
+            $("#result").html(text);
+        };
+
+
+
+        $(document).ready(function () {
+            $("#all, #byId").click(function () {
+                var url = $(this).data("url");
+                $.getJSON(url, {}, success, error).fail(error);
+            });
+
+            $("#byId").click(function () {
+                var url = $(this).data("url");
+                url = url + $("#taskId").val();
+                $.getJSON(url, {}, success)
+            });
+
+            $("#post").click(function () {
+                var url = $(this).data("url");
+                $.post(url, { Name: $("#taskName").val() }, success).fail(error);
+            });
+
+            $("#put").click(function () {
+                var url = $(this).data("url");
+                url = url + $("#taskId").val();
+                $.ajax({
+                    url: url,
+                    data:{ Name: $("#taskName").val(), Id: $("#taskId").val() },
+                    type:"PUT"
+                }).done(success).fail(error);
+            });
+
+            $("#delete").click(function () {
+                var url = $(this).data("url");
+                url = url + $("#taskId").val();
+                $.ajax({
+                    url: url,
+                    type: "DELETE"
+                }).done(success).fail(error);
+            });
+
+        });
+    </script>
+}
+
+<form>
+    <label for="">Id</label>
+    <input type="text" placeholder="Task id" id="taskId" />
+    <label for="">Name</label>
+    <input type="text" placeholder="Task name" id="taskName" />
+</form>
+
+
+<input id="all" type="button" class="btn btn-primary" value="Get All" data-url="http://localhost:23009/api/Task" />
+<input id="byId" type="button" class="btn btn-primary" value="Get By id" data-url="http://localhost:23009/api/Task/" />
+
+<input id="post" type="button" class="btn btn-info" value="Create" data-url="http://localhost:23009/api/Task/" />
+<input id="put" type="button" class="btn btn-info" value="Update" data-url="http://localhost:23009/api/Task/" />
+
+<input id="delete" type="button" class="btn btn-danger" value="Delete" data-url="http://localhost:23009/api/Task/" />
+
+
+
+
+
+
+<h2>Ajax response</h2>
+<div id="result" style="border: 1px solid #808080; min-height: 200px">
+</div>
+
+<iframe src="http://localhost:23009/Message"></iframe>
